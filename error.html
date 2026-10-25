@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}صفحه پیدا نشد | یابنده{% endblock %}
+{% block content %}
+<section class="empty error-page">
+  <span aria-hidden="true">🧭</span>
+  <h1>{{ message }}</h1>
+  <a class="btn pink" href="{{ url_for('browse') }}">رفتن به آگهی‌ها</a>
+</section>
+{% endblock %}

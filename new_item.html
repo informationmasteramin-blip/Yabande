@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}ثبت وسیله | یابنده{% endblock %}
+{% block content %}
+<section class="formpage">
+  <a class="back" href="{{ url_for('browse') }}">← برگشت به آگهی‌ها</a>
+  <label class="tag">یک آگهی تازه</label>
+  <h1>بیا ثبتش کنیم!</h1>
+  <p>هرچه اطلاعات دقیق‌تر باشد، احتمال پیدا کردن مورد مشابه بیشتر است.</p>
+  <form class="panel itemform" method="post" action="{{ url_for('new_item') }}" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="twocol">
+      <label>این وسیله...
+        <select name="status" required>
+          <option value="found">پیدا شده</option><option value="lost">گم شده</option>
+        </select>
+      </label>
+      <label>نام وسیله<input name="item_name" placeholder="مثلاً گوشی سامسونگ" maxlength="80" required></label>
+    </div>
+    <div class="twocol">
+      <label>نوع وسیله
+        <select name="item_type" required>
+          <option value="">انتخاب کن</option>
+          {% for item_type in ['موبایل','زیورآلات','کارت','کتاب','کیف','کلید','هدفون','سایر'] %}
+            <option value="{{ item_type }}">{{ item_type }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>رنگ<input name="color" placeholder="مثلاً مشکی" maxlength="60" required></label>
+    </div>
+    <label>محل پیدایش یا آخرین محل مشاهده
+      <input name="location" placeholder="مثلاً کتابخانه دانشگاه" maxlength="120" required>
+    </label>
+    <label>ایمیل تماس<input name="contact_email" type="email" value="{{ user.email }}" maxlength="254" required autocomplete="email"></label>
+    <label>توضیحات کوتاه <small>(حداکثر ۱۸۰ نویسه؛ حداکثر دو خط در آگهی)</small>
+      <textarea name="description" maxlength="180" rows="2" required></textarea>
+    </label>
+    <label>بارگذاری عکس <small>(اختیاری؛ PNG، JPG، WEBP یا GIF و حداکثر ۵ مگابایت)</small>
+      <input name="image_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif,image/png,image/jpeg,image/webp,image/gif">
+    </label>
+    <p class="hint">برای حفظ حریم خصوصی، ایمیل تماس فقط به کاربران واردشده نمایش داده می‌شود.</p>
+    <button class="btn pink" type="submit">ثبت در سامانه ✦</button>
+  </form>
+</section>
+{% endblock %}

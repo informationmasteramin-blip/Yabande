@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}آگهی‌های من | یابنده{% endblock %}
+{% block content %}
+<section class="sectionhead">
+  <h1>آگهی‌های من</h1>
+  <a class="btn pink" href="{{ url_for('new_item') }}">+ ثبت آگهی</a>
+</section>
+<div class="grid">
+  {% for item in items %}
+    <a class="itemcard" href="{{ url_for('detail', item_id=item.id) }}">
+      <div class="itemart purpleart">
+        {% if item.image_url %}<img src="{{ item.image_url|item_image }}" alt="تصویر وسیله" loading="lazy">{% endif %}
+        <span aria-hidden="true">{{ {'موبایل':'📱','زیورآلات':'💍','کارت':'💳','کتاب':'📚','کیف':'🎒','کلید':'🔑','هدفون':'🎧','سایر':'📦'}.get(item.item_type,'📦') }}</span>
+        <b class="status {{ 'found' if item.status=='found' else 'lost' }}">{{ 'پیدا شده' if item.status=='found' else 'گم شده' }}</b>
+      </div>
+      <div class="iteminfo">
+        <h3>{{ item.item_name }}</h3><p>{{ item.location }}</p>
+        <span>رنگ: {{ item.color }}</span>
+        <p class="desc">{{ item.description }}</p>
+        <small class="date">تاریخ ثبت: {{ item.created_at[:10].replace('-', '/') }}</small>
+      </div>
+    </a>
+  {% else %}
+    <div class="empty">
+      <span aria-hidden="true">📭</span><h3>هنوز آگهی ثبت نکرده‌ای</h3>
+      <a class="btn pink" href="{{ url_for('new_item') }}">ثبت اولین آگهی</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

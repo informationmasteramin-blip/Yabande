@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام | یابنده{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="art pinkart">
+    <span aria-hidden="true">🎒</span>
+    <h2>یک قدم تا پیدا شدن!</h2>
+    <p>حساب بساز تا بتوانی وسیله‌ای را ثبت کنی یا به صاحبش برگردانی.</p>
+  </div>
+  <form class="panel authform" method="post" action="{{ url_for('signup') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="tag">به جمع ما بپیوند</label>
+    <h1>ساخت حساب کاربری</h1>
+    <label>نام کاربری<input name="username" maxlength="60" required autocomplete="username"></label>
+    <label>ایمیل<input name="email" type="email" maxlength="254" required autocomplete="email"></label>
+    <label>رمز عبور <small>حداقل ۸ نویسه</small>
+      <input name="password" type="password" minlength="8" maxlength="256" required autocomplete="new-password">
+    </label>
+    <button class="btn pink" type="submit">ثبت‌نام</button>
+    <p>قبلاً حساب ساخته‌ای؟ <a href="{{ url_for('login') }}">وارد شو</a></p>
+  </form>
+</section>
+{% endblock %}

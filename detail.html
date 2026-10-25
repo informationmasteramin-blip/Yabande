@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}جزئیات وسیله | یابنده{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('browse') }}">← برگشت به آگهی‌ها</a>
+<section class="detail panel">
+  <div class="detailart">
+    {% if item.image_url %}<img src="{{ item.image_url|item_image }}" alt="تصویر وسیله">{% endif %}
+    <span aria-hidden="true">{{ {'موبایل':'📱','زیورآلات':'💍','کارت':'💳','کتاب':'📚','کیف':'🎒','کلید':'🔑','هدفون':'🎧','سایر':'📦'}.get(item.item_type,'📦') }}</span>
+    <b class="status {{ 'found' if item.status=='found' else 'lost' }}">{{ 'پیدا شده' if item.status=='found' else 'گم شده' }}</b>
+    {% if item.is_demo %}<small class="demo-badge">نمونه نمایشی</small>{% endif %}
+  </div>
+  <div class="detailbody">
+    <label class="tag">کارت مشخصات وسیله</label>
+    {% if item.is_demo %}<p class="sample-note">این آگهی فقط برای نمایش است و گزارش واقعی نیست.</p>{% endif %}
+    <h1>{{ item.item_name }}</h1>
+    <dl>
+      <div><dt>نوع وسیله</dt><dd>{{ item.item_type }}</dd></div>
+      <div><dt>محل</dt><dd>{{ item.location }}</dd></div>
+      <div><dt>رنگ</dt><dd>{{ item.color }}</dd></div>
+      <div>
+        <dt>ایمیل تماس</dt>
+        <dd>
+          {% if not item.contact_email %}
+            برای آگهی نمونه اطلاعات تماس ثبت نشده است.
+          {% elif show_contact %}
+            <a href="mailto:{{ item.contact_email }}">{{ item.contact_email }}</a>
+          {% else %}
+            <a href="{{ url_for('login') }}">برای مشاهدهٔ ایمیل وارد شوید</a>
+          {% endif %}
+        </dd>
+      </div>
+      <div><dt>توضیحات</dt><dd class="description">{{ item.description }}</dd></div>
+      <div><dt>تاریخ ثبت</dt><dd>{{ item.created_at[:10].replace('-', '/') }}</dd></div>
+    </dl>
+    <p class="muted">ثبت‌کننده: {{ item.username }}</p>
+    {% if user and user.id==item.user_id %}
+      <form method="post" action="{{ url_for('delete_item', item_id=item.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn danger" type="submit">حذف آگهی</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

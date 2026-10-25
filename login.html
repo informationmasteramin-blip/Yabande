@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}ورود | یابنده{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="art">
+    <span aria-hidden="true">🔎</span>
+    <h2>گمشده‌ات، شاید همین‌جاست!</h2>
+    <p>برای ثبت وسیله یا پیگیری آگهی‌ها وارد حساب خودت شو.</p>
+  </div>
+  <form class="panel authform" method="post" action="{{ url_for('login') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="tag">خوش برگشتی!</label>
+    <h1>ورود به یابنده</h1>
+    <label>ایمیل<input name="email" type="email" required autocomplete="email" maxlength="254"></label>
+    <label>رمز عبور<input name="password" type="password" required autocomplete="current-password"></label>
+    <button class="btn pink" type="submit">ورود</button>
+    <p>حساب نداری؟ <a href="{{ url_for('signup') }}">ثبت‌نام کن</a><br>
+      <a href="{{ url_for('browse') }}">فقط دیدن آگهی‌ها بدون ورود</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

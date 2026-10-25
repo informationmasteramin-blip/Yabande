@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}یابنده | پیدا کنیم{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <label class="tag">چیزهای گمشده، دوباره پیدا می‌شوند</label>
+    <h1>یه چیزی گم کردی؟<br><mark>با هم پیداش می‌کنیم.</mark></h1>
+    <p>وسایل گمشده و پیدا‌شده را ببین، جست‌وجو کن و اگر مورد مشابهی دیدی با صاحب یا یابنده تماس بگیر.</p>
+    {% if user %}
+      <a class="btn dark" href="{{ url_for('new_item') }}">ثبت وسیله +</a>
+    {% else %}
+      <a class="btn dark" href="{{ url_for('login') }}">برای ثبت، وارد شو</a>
+    {% endif %}
+  </div>
+  <div class="heroart" aria-hidden="true">
+    <div class="blob"></div>
+    <div class="heroitem"><span>🔑</span><b>کلیدها</b><small>ساختمان کتابخانه</small><i>پیدا شد!</i></div>
+    <strong class="star">✳</strong>
+  </div>
+</section>
+
+<section class="sectionhead" id="items">
+  <div><label class="tag">تابلوی آگهی‌ها</label><h2>دنبال چی می‌گردی؟</h2></div>
+  {% if user %}<a class="btn pink" href="{{ url_for('new_item') }}">+ ثبت آگهی جدید</a>{% endif %}
+</section>
+
+<form class="filters panel" method="get" action="{{ url_for('browse') }}">
+  <div class="tabs" aria-label="فیلتر وضعیت">
+    <a class="{{ 'active' if status=='found' else '' }}" href="{{ url_for('browse', status='found', q=q, kind=kind) }}">پیدا‌شده‌ها</a>
+    <a class="{{ 'active' if status=='lost' else '' }}" href="{{ url_for('browse', status='lost', q=q, kind=kind) }}">گمشده‌ها</a>
+    <a class="{{ 'active' if status=='all' else '' }}" href="{{ url_for('browse', status='all', q=q, kind=kind) }}">همه</a>
+  </div>
+  <input name="q" value="{{ q }}" maxlength="100" placeholder="جست‌وجو بر اساس نام، رنگ یا محل..." aria-label="عبارت جست‌وجو">
+  <select name="kind" aria-label="نوع وسیله">
+    <option value="">همه نوع‌ها</option>
+    {% for item_type in types %}
+      <option value="{{ item_type }}" {{ 'selected' if kind==item_type else '' }}>{{ item_type }}</option>
+    {% endfor %}
+  </select>
+  <input type="hidden" name="status" value="{{ status }}">
+  <button class="btn dark" type="submit">جست‌وجو</button>
+</form>
+
+<div class="grid">
+  {% for item in items %}
+    <a class="itemcard" href="{{ url_for('detail', item_id=item.id) }}">
+      <div class="itemart {{ 'pinkart' if loop.index%3==0 else ('purpleart' if loop.index%2==0 else '') }}">
+        {% if item.image_url %}<img src="{{ item.image_url|item_image }}" alt="تصویر وسیله" loading="lazy">{% endif %}
+        <span aria-hidden="true">{{ {'موبایل':'📱','زیورآلات':'💍','کارت':'💳','کتاب':'📚','کیف':'🎒','کلید':'🔑','هدفون':'🎧','سایر':'📦'}.get(item.item_type,'📦') }}</span>
+        <b class="status {{ 'found' if item.status=='found' else 'lost' }}">{{ 'پیدا شده' if item.status=='found' else 'گم شده' }}</b>
+        {% if item.is_demo %}<small class="demo-badge">نمونه نمایشی</small>{% endif %}
+      </div>
+      <div class="iteminfo">
+        <h3>{{ item.item_name }} <small aria-hidden="true">↙</small></h3>
+        <p>{{ item.location }}</p>
+        <div class="meta"><span>رنگ: {{ item.color }}</span><span>{{ item.item_type }}</span></div>
+        <p class="desc">{{ item.description }}</p>
+        <small class="date">تاریخ ثبت: {{ item.created_at[:10].replace('-', '/') }}</small>
+      </div>
+    </a>
+  {% else %}
+    <div class="empty">
+      <span aria-hidden="true">🧭</span><h3>هنوز آگهی‌ای اینجا نیست</h3>
+      <p>جست‌وجو را تغییر بده یا اولین آگهی را ثبت کن.</p>
+      {% if user %}
+        <a class="btn pink" href="{{ url_for('new_item') }}">ثبت اولین آگهی</a>
+      {% else %}
+        <a class="btn pink" href="{{ url_for('login') }}">ورود به حساب</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
